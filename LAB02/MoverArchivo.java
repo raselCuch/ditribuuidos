@@ -11,90 +11,51 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MoverArchivo {
-
-    static FileInputStream fis = null;
-    static FileOutputStream fos = null;
-    static long[] bytes = null;
+    static byte[] fileContent = null;
 
     public static int contadorBytes(File file) {
-
-        int nBytes = 0;
-        int elByte = 0;
-
-        try {
-            fis = new FileInputStream(file);
-            while (true) {
-                elByte = fis.read();
-                if (elByte != -1) {
-                    nBytes++;
-                } else {
-                    break;
-                }
+        int byteCount = 0;
+        try (FileInputStream fis = new FileInputStream(file)) {
+            while (fis.read() != -1) {
+                byteCount++;
             }
-            fis.close();
-        } catch (FileNotFoundException ex) {
-            System.out.println("Archivo no encontrado");
         } catch (IOException ex) {
-            System.out.println("Error I/O en contadorBytes()");
+            System.out.println("Error al contar bytes: " + ex.getMessage());
         }
-        return nBytes;
+        return byteCount;
     }
 
     public static void leerBytes(File file) {
-
-        BasicFileAttributes attr = null;
-
         try {
-            attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+            long fileSize = Files.size(file.toPath());
+            fileContent = new byte[(int) fileSize];
 
-        } catch (IOException ex) {
-            System.out.println("Error I/O leerBytes()");
-        }
-
-        int elByte = 0, idxBytes = 0;
-        long cantBytes = attr.size();
-
-        try {
-            fis = new FileInputStream(file);
-        } catch (FileNotFoundException ex) {
-            System.out.println("Archivo no encontrado");
-        }
-
-        bytes = new long[(int) cantBytes];
-
-        while (true) {
-            try {
-                elByte = fis.read();
-                if (elByte == -1) {
-                    break;
-                } else {
-                    bytes[idxBytes] = elByte;
-                    idxBytes++;
+            try (FileInputStream fis = new FileInputStream(file)) {
+                int bytesRead = fis.read(fileContent); // captura el conteniedo
+                if (bytesRead == -1) {
+                    System.out.println("No se pudo leer el archivo.");
                 }
-            } catch (IOException ex) {
-                System.out.println("Error I/O leerBytes()");
             }
+        } catch (IOException ex) {
+            System.out.println("Error al leer archivo: " + ex.getMessage());
         }
     }
 
-    public static void escribirArchivo(File file) {
-
-        try {
-            fos = new FileOutputStream(file);
-        } catch (FileNotFoundException ex) {
+    public static void escribirArchivo(File destino) {
+        try (FileOutputStream fos = new FileOutputStream(destino, true)) { // true, false
+            fos.write(fileContent);
+        } catch (IOException ex) {
             Logger.getLogger(MoverArchivo.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        for (int idx = 0; idx < bytes.length; idx++) {
-            try {
-                fos.write((int) bytes[idx]);
-            } catch (IOException ex) {
-                Logger.getLogger(MoverArchivo.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 
     public static void main(String[] args) {
+        File archivoOrigen = new File("D:\\Universidad\\archivoOrigen.txt");
+        File archivoDestino = new File("D:\\Universidad\\archivoDestino.txt");
 
+        leerBytes(archivoOrigen);
+        escribirArchivo(archivoDestino);
+
+        System.out.println("Operación completada.");
     }
 }

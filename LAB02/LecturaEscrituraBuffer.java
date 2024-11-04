@@ -12,70 +12,67 @@ import java.util.logging.Logger;
 
 public class LecturaEscrituraBuffer {
 
-     public void leerXCaracter(File file) {
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            BufferedReader bf = new BufferedReader(new InputStreamReader(fis,"utf-8"));
-            
-            int dato;
+     public void leerPorCaracter(File archivo) {
+         try (FileInputStream fileInputStream  = new FileInputStream(archivo);
+              BufferedReader bufferedReader =
+                      new BufferedReader(new InputStreamReader(fileInputStream , "utf-8"))) { // permite leer linea completa
 
-            while (true) {
-                dato = bf.read();
-                if (dato != -1) {
-                    System.out.println("" + (char) dato);
-                } else {
-                    break;
-                }
-            }
-            fis.close();
-        } catch (FileNotFoundException ex) {
-            System.out.println("Archivo no ubicado");
-        } catch (IOException ex) {
-            System.out.println("Error de Entrada o Salida");
-        }
+             int caracter;
+             while ((caracter = bufferedReader.read()) != -1) {
+                 System.out.print((char) caracter);
+             }
+         } catch (FileNotFoundException e) {
+             System.out.println("Archivo no ubicado");
+         } catch (IOException e) {
+             System.out.println("Error de Entrada o Salida");
+         }
     }
-    
-    public void leerCadena(File file) {
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            BufferedReader bf = new BufferedReader(new InputStreamReader(fis,"utf-8"));
-            
-            String cadena="";
 
-            while (true) {
-                cadena = bf.readLine();                
-                if (cadena != null) {
-                    System.out.println("" + cadena);
-                } else {
-                    break;
-                }
+    public void leerPorLinea(File archivo) {
+        try (FileInputStream fileInputStream  = new FileInputStream(archivo);
+             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream , "utf-8"))) {
+
+            String linea;
+            while ((linea = bufferedReader.readLine()) != null) {
+                System.out.println(linea);
             }
-            fis.close();
-        } catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException e) {
             System.out.println("Archivo no ubicado");
-        } catch (IOException ex) {
+        } catch (IOException e) {
             System.out.println("Error de Entrada o Salida");
         }
     }
 
-    public void escribirDatos(File file, String cadena) {
+    public void escribirDatos(File archivo, String contenido) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(archivo, false)) { // false: sobre escribe, true: agrega al final
+            fileOutputStream.write(contenido.getBytes("UTF-8")); // Escribe directamente
 
-        int dato;
-        try {
-            FileOutputStream fos = new FileOutputStream(file, true);
-            for (int c = 0; c < cadena.length(); c++) {
-                dato = cadena.charAt(c);
-                fos.write(dato);
-            }
-            fos.close();
-        } catch (FileNotFoundException ex) {
+//            int dato;
+//            for (int c = 0; c < contenido.length(); c++) {
+//                dato = contenido.charAt(c);
+//                fileOutputStream.write(dato);
+//            }
+        } catch (FileNotFoundException e) {
             System.out.println("Archivo no Ubicado");
-        } catch (IOException ex) {
+        } catch (IOException e) {
             System.out.println("Error de entrada o Salida");
         }
     }
 
     public static void main(String[] args) {
+        LecturaEscrituraBuffer buffer = new LecturaEscrituraBuffer();
+        File file = new File("D:\\Universidad\\archivo2.txt"); // Cambia la ruta según tu sistema
 
+        // Escribir datos en el archivo
+        buffer.escribirDatos(file, "Hola, este es un texto de prueba2.\n");
+
+        // Leer el archivo carácter por carácter
+        System.out.println("Lectura carácter por carácter:");
+        buffer.leerPorCaracter(file);
+
+        // Leer el archivo línea por línea
+        System.out.println("\nLectura línea por línea:");
+        buffer.leerPorLinea(file);
     }
+
 }

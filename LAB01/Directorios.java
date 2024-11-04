@@ -8,45 +8,56 @@ import java.nio.file.Paths;
 
 public class Directorios {
 
-     public static Path StringAPath(String cpath){ // convierte string a path
-        Path path = Paths.get(cpath);
-        return path;
+     public static Path convertirStringAPath(String ruta){ // convierte string a path
+         return Paths.get(ruta);
     }
-     
-    public static void evaluaDirectorioArchivo(File file){ //
-        
-        if (file.exists())    {
-            System.out.println("Ruta valida: "+ file.toString());
-            if (file.isDirectory())
-                System.out.println("Es una carpeta o directorio");
-            if (file.isFile())
-                System.out.println("Es una archivo");
-        }else{
-            System.out.println("Ruta no valida");
+
+    public static void verificarArchivoODirectorio(File ruta) {
+        if (!ruta.exists()) {
+            System.out.println("Ruta no válida.");
+            return;
+        }
+
+        System.out.println("Ruta válida: " + ruta);
+        if (ruta.isDirectory()) {
+            System.out.println("Es un directorio.");
+        }
+        if (ruta.isFile()) {
+            System.out.println("Es un archivo.");
         }
     }
-     
-    public static void listaContenidoDirectorio(File file){
-        
-        String[] lista = file.list();
-        if (lista == null || lista.length == 0)
-            System.out.println("Sin elemantos");
-        else{
-            for (int i = 0;i < lista.length;i++)
-                System.out.println(lista[i]);
+
+
+    public static void listaContenidoDirectorio(File directorio){
+        if (!directorio.isDirectory()) {
+            System.out.println("El archivo no es un directorio.");
+            return;
+        }
+
+        String[] contenidoList = directorio.list();
+
+        if (contenidoList == null || contenidoList.length == 0) {
+            System.out.println("El directorio está vacío.");
+            return;
+        }
+
+        System.out.println("Contenido del directorio:");
+        for (String elemento : contenidoList) { // int i = 0;i < contenidoList.length;i++
+            System.out.println(elemento);
         }
     }
     
     public static void main(String[] args) {
-         // experimentar por posible examen
-//        File file1 = new File("D:\\UNU");
         File file1 = new File("D:\\Universidad");
-//        File file2 = new File("D:\\UNU\\firmas\\Dni Img\\anverso.jpeg");
-        File file2 = new File("D:\\Universidad");
-        evaluaDirectorioArchivo(file1);
-        evaluaDirectorioArchivo(file2);
+        File file2 = new File("D:\\Universidad\\caraturla.pdf");
+        verificarArchivoODirectorio(file1);
+        verificarArchivoODirectorio(file2);
+
         System.out.println("====== CONTENIDO DE FILE1======");
         listaContenidoDirectorio(file1);
+
+        System.out.println("====== CONTENIDO DE FILE2======");
+        listaContenidoDirectorio(file2);
     }
 }
 

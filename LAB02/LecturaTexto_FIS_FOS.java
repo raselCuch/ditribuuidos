@@ -11,19 +11,13 @@ import java.util.logging.Logger;
 public class LecturaTexto_FIS_FOS {
 
     public void leerDatos(File file) {
-        try {
-            FileInputStream fis = new FileInputStream(file);
+        try (FileInputStream fis = new FileInputStream(file)) {
             int dato;
 
-            while (true) {
-                dato = fis.read();
-                if (dato != -1) {
-                    System.out.println("" + (char) dato);
-                } else {
-                    break;
-                }
+            while ((dato = fis.read()) != -1) {
+                System.out.print((char) dato);
             }
-            fis.close();
+
         } catch (FileNotFoundException ex) {
             System.out.println("Archivo no ubicado");
         } catch (IOException ex) {
@@ -32,15 +26,10 @@ public class LecturaTexto_FIS_FOS {
     }
 
     public void escribirDatos(File file, String cadena) {
-
-        int dato;
-        try {
-            FileOutputStream fos = new FileOutputStream(file, true);
-            for (int c = 0; c < cadena.length(); c++) {
-                dato = cadena.charAt(c);
-                fos.write(dato);
+        try (FileOutputStream fos = new FileOutputStream(file, true)) { // true: agrega, false: sobre escribe
+            for (char c : cadena.toCharArray()) { // int c = 0; c < cadena.length(); c++
+                fos.write(c);  // dato = cadena.charAt(c);
             }
-            fos.close();
         } catch (FileNotFoundException ex) {
             System.out.println("Archivo no Ubicado");
         } catch (IOException ex) {
@@ -49,6 +38,11 @@ public class LecturaTexto_FIS_FOS {
     }
 
     public static void main(String[] args) {
+        LecturaTexto_FIS_FOS lectorEscritor = new LecturaTexto_FIS_FOS();
 
+        File file = new File("D:\\Universidad\\archivo.txt");
+
+        lectorEscritor.escribirDatos(file, "Este es un texto de prueba3.\n"); // escribe en archivo
+        lectorEscritor.leerDatos(file); // leyendo archivo
     }
 }
