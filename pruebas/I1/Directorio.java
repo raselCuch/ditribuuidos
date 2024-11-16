@@ -13,19 +13,19 @@ public class Directorio extends Contenido {
 
     @Override
     public void mostrarContenido(int nivel) {
-        String indentacion = " ".repeat(nivel * 4);
+        String indentacion = " ".repeat(nivel * 4); // 1er nivel
         System.out.println(indentacion + "Directorio: " + getNombre());
 
         File[] contenido = directorio.listFiles();
         if (contenido != null) {
             for (File archivo : contenido) {
-                Contenido contenidoItem;
-                if (archivo.isDirectory()) {
+                Contenido contenidoItem; // crea interface
+                if (archivo.isDirectory()) { // instancia segun sea
                     contenidoItem = new Directorio(archivo);
                 } else {
                     contenidoItem = new Archivo(archivo);
                 }
-                contenidoItem.mostrarContenido(nivel + 1);
+                contenidoItem.mostrarContenido(nivel + 1); // aumenta un nivel
             }
         }
     }

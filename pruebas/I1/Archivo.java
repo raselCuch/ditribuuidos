@@ -27,7 +27,6 @@ public class Archivo extends Contenido {
             String linea;
             while ((linea = reader.readLine()) != null) {
                 String[] palabras = linea.split("\\W+"); // Dividir por no caracteres de palabra
-//                String[] palabras = linea.split(" "); // Dividir por no caracteres de palabra
                 for (String p : palabras) {
                     if (p.equalsIgnoreCase(palabra)) {
                         conteo++;
