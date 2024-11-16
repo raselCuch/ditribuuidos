@@ -85,7 +85,7 @@ public class serverSocket {
                 }else{
                     flujoEnviar.println("Hasta al vista baby...");
                     System.out.println("El cliente se desconecto");
-                    
+
                     break;
                 }
             }     
@@ -100,6 +100,6 @@ public class serverSocket {
     public static void main(String[] args) {
         serverSocket s1 = new serverSocket();
         //s1.initServerSoloUnMsg(9090);
-        s1.initServerMsgContinuo(9090);
+        s1.initServerMsgContinuo(9999);
     }
 }

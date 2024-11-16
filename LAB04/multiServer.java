@@ -61,6 +61,6 @@ public class multiServer {
     
     public static void main(String[] args) {
         multiServer ms = new multiServer();
-        ms.initServer(6666);
+        ms.initServer(9999);
     }
 }
